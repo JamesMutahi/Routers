@@ -13,6 +13,11 @@
             </ul>
             <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link text-black" href="{% url 'admin:index' %}">ADMIN</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link text-black" href="{% url 'logout' %}">LOGOUT</a>
                     </li>

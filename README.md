@@ -13,17 +13,6 @@ None
 3. [Production](#Production)
 
 ## Setup and installations
-* Fork the data onto your own personal repository.
-* Clone Project to your machine
-* Activate a virtual environment on terminal: `source venv/bin/activate`
-* Install all the requirements found in requirements file.
-* On your terminal run `python manage.py runserver`
-* Access the live site using the local host provided
-
-## Running the tests
-
-To run tests run `python manage.py test`
-
 #### Prerequisites
 1. [Python](https://www.python.org/downloads/)
 2. [virtualenv](https://virtualenv.pypa.io/en/stable/installation/)
