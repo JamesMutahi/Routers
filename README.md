@@ -21,6 +21,7 @@ None
 #### Technologies used
     - Python
     - Django
+    - Postgresql
 
 #### Clone the Repo and rename it to suit your needs.
 ```bash
@@ -41,6 +42,12 @@ python -m virtualenv venv
 
 ```bash
 source venv/bin/activate
+```
+
+## Set up Postresql database
+On your database query console
+```
+CREATE EXTENSION pg_trgm;
 ```
 
 #### Setting up environment variables

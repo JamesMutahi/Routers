@@ -1,0 +1,14 @@
+{% extends 'web/template.html' %}
+{% block content %}
+    <h1 class="fst-italic lh-1 mb-4">Routers</h1>
+    <p class="mb-5">The single place you can find routes with the saccos that ply the route and their
+        competitive prices. Sign Up below to get started!</p>
+    <div class="col-auto mb-3">
+        <a class="btn btn-lg btn-primary" href="{% url 'register' %}">Sign Up</a>
+    </div>
+    <div class="border-top pt-3">
+        <p class="text-muted">
+            Already have an account? <a class="ml-2" href="{% url 'login' %}">Login</a>
+        </p>
+    </div>
+{% endblock %}
