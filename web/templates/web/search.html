@@ -1,0 +1,27 @@
+{% extends "web/base.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% if location or destination %}
+<h1>Routes containing "{{ location }}" or "{{ destination }}"</h1>
+<h3>
+    {% with results.count as total_results %}
+    Found {{ total_results }} result{{ total_results|pluralize }}
+    {% endwith %}
+</h3>
+{#{% for post in results %}#}
+{#<h4><a href="{{ post.get_absolute_url }}">{{ post.name }}</a></h4>#}
+{#{{ post.body|truncatewords:5 }}#}
+{#{% empty %}#}
+{#<p>There are no results for your query.</p>#}
+{#{% endfor %}#}
+{#<p><a href="{% url 'blog:post_search' %}">Search again</a></p>#}
+{% else %}
+<h1>Search for routes</h1>
+<form action="." method="get">
+    {{ form|crispy }}
+    <input type="submit" value="Search" class="btn btn-outline-info">
+</form>
+{% endif %}
+{% endblock %}
