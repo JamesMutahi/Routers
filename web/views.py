@@ -51,8 +51,12 @@ class RouteDetailView(DetailView):
     # html template by default is route-detail.html
     model = Route
 
+    # override get_context_data method to pass in only saccos on the chosen route that have the destination
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # get the chosen route
         route = Route.objects.get(id=self.kwargs['pk'])
+        # filter saccos on route to only show ones with the destination
         context['saccos'] = route.saccos.filter(id__in=self.request.session.get('sacco_ids'))
+        print(route.tld.bus_stops.all())
         return context

@@ -1,7 +1,11 @@
 {% extends "web/base.html" %}
 {% block content %}
     <h1> Saccos on {{ route.name }} </h1>
-{% for sacco in saccos %}
-    <p>{{ sacco.name }}</p>
+    {% for sacco in saccos %}
+        <p>{{ sacco.name }}</p>
+    {% endfor %}
+
+    {% for bus_stop in route.tld.bus_stops.all %}
+        <p>{{ bus_stop.name }}</p>
     {% endfor %}
 {% endblock content %}
