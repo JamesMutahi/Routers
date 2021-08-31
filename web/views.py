@@ -37,10 +37,22 @@ def home(request):
             ).filter(similarity__gt=0.3).order_by('-similarity')
             # filter routes by saccos with the destination
             routes = routes.filter(saccos__in=saccos)
-    return render(request, 'web/search.html',
-                  {'form': form, 'location': location, 'destination': destination, 'routes': routes,
-                   'title': 'Search'})
+            # Save sacco ids; will fetch this when viewing route detail to remove saccos not going to the destination
+            sacco_ids = []
+            for sacco in saccos:
+                sacco_ids.append(sacco.id)
+            request.session['sacco_ids'] = sacco_ids
+    context = {'form': form, 'location': location, 'destination': destination, 'routes': routes, 'title': 'Search'}
+    return render(request, 'web/search.html', context)
 
 
 class RouteDetailView(DetailView):
+    # This class based view is handled by django
+    # html template by default is route-detail.html
     model = Route
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        route = Route.objects.get(id=self.kwargs['pk'])
+        context['saccos'] = route.saccos.filter(id__in=self.request.session.get('sacco_ids'))
+        return context

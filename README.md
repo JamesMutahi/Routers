@@ -44,7 +44,7 @@ python -m virtualenv venv
 source venv/bin/activate
 ```
 
-## Set up Postresql database
+#### Set up Postresql database
 On your database query console
 ```
 CREATE EXTENSION pg_trgm;
