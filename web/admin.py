@@ -20,10 +20,10 @@ class FareInline(admin.TabularInline):
 
 
 class FareAdmin(admin.ModelAdmin):
-    list_display = ['fare', 'route', 'distance', ]
+    list_display = ['route', 'distance', 'fare', ]
     search_fields = ['fare', 'tld', ]
     fieldsets = [
-        (None, {'fields': ['bus_stop', 'tld', 'distance', ]}),
+        (None, {'fields': ['route', 'distance', 'fare', ]}),
     ]
 
 
@@ -70,7 +70,7 @@ class RouteAdmin(admin.ModelAdmin):
     list_display = ['name', ]
     search_fields = ['name', ]
     fieldsets = [
-        (None, {'fields': ['name', 'saccos', ]}),
+        (None, {'fields': ['name', 'starting_point', 'saccos', ]}),
     ]
     filter_horizontal = ('saccos',)
     inlines = [TLDInline, ]
@@ -87,10 +87,10 @@ class RouteInline(admin.TabularInline):
 
 
 class SaccoAdmin(admin.ModelAdmin):
-    list_display = ['name', ]
-    search_fields = ['name', ]
+    list_display = ['name', 'ending_point', ]
+    search_fields = ['name', 'ending_point', ]
     fieldsets = [
-        (None, {'fields': ['name', ]}),
+        (None, {'fields': ['name', 'ending_point', ]}),
     ]
     inlines = [RouteInline, ]
 
