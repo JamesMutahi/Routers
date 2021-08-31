@@ -1,0 +1,7 @@
+{% extends "web/base.html" %}
+{% block content %}
+    <h1> Saccos on {{ route.name }} </h1>
+{% for sacco in route.saccos.all %}
+    <p>{{ sacco.name }}</p>
+    {% endfor %}
+{% endblock content %}
