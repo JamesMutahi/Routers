@@ -36,10 +36,10 @@ class BusStopInline(admin.TabularInline):
 
 
 class BusStopAdmin(admin.ModelAdmin):
-    list_display = ['bus_stop', 'tld', ]
-    search_fields = ['bus_stop', 'tld', ]
+    list_display = ['name', 'tld', ]
+    search_fields = ['name', 'tld', ]
     fieldsets = [
-        (None, {'fields': ['bus_stop', 'tld', ]}),
+        (None, {'fields': ['name', 'tld', ]}),
     ]
 
 

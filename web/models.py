@@ -27,21 +27,21 @@ class Route(models.Model):
 
 class TLD(models.Model):
     number = models.PositiveIntegerField(primary_key=True)
-    route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name="tld")
+    route = models.OneToOneField(Route, on_delete=models.CASCADE, related_name="tld")
 
     def __str__(self):
         return str(self.number)
 
 
 class BusStop(models.Model):
-    tld = models.ForeignKey(TLD, on_delete=models.CASCADE)
-    bus_stop = models.CharField(max_length=255)
+    tld = models.ForeignKey(TLD, on_delete=models.CASCADE, related_name="bus_stops")
+    name = models.CharField(max_length=255)
 
     class Meta:
-        unique_together = ['tld', 'bus_stop', ]
+        unique_together = ['tld', 'name', ]
 
     def __str__(self):
-        return self.bus_stop
+        return self.name
 
 
 class Fare(models.Model):
