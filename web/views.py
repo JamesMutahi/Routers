@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import TrigramSimilarity
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 
 from web.forms import SearchForm
-from web.models import Route, Sacco
+from web.models import Route, Sacco, Commute
 
 
 def landing_page(request):
@@ -46,7 +47,7 @@ def home(request):
     return render(request, 'web/search.html', context)
 
 
-class RouteDetailView(DetailView):
+class RouteDetailView(DetailView, LoginRequiredMixin):
     # This class based view is handled by django
     # html template by default is route-detail.html
     model = Route
@@ -58,5 +59,13 @@ class RouteDetailView(DetailView):
         route = Route.objects.get(id=self.kwargs['pk'])
         # filter saccos on route to only show ones with the destination
         context['saccos'] = route.saccos.filter(id__in=self.request.session.get('sacco_ids'))
-        print(route.tld.bus_stops.all())
         return context
+
+
+class CommuteCreateView(LoginRequiredMixin, CreateView):
+    model = Commute
+    fields = ['pickup_point', 'drop_off_point', ]
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from leaflet.admin import LeafletGeoAdmin
 
 from web.models import *
 
@@ -36,10 +37,10 @@ class BusStopInline(admin.TabularInline):
 
 
 class BusStopAdmin(admin.ModelAdmin):
-    list_display = ['name', 'tld', ]
-    search_fields = ['name', 'tld', ]
+    list_display = ['tld', 'point', ]
+    search_fields = ['tld', 'point', ]
     fieldsets = [
-        (None, {'fields': ['name', 'tld', ]}),
+        (None, {'fields': ['tld', 'point', ]}),
     ]
 
 
@@ -66,7 +67,7 @@ class TLDInline(admin.TabularInline):
     show_change_link = True
 
 
-class RouteAdmin(admin.ModelAdmin):
+class RouteAdmin(LeafletGeoAdmin):
     list_display = ['name', ]
     search_fields = ['name', ]
     fieldsets = [
@@ -86,7 +87,7 @@ class RouteInline(admin.TabularInline):
     verbose_name_plural = "Routes"
 
 
-class SaccoAdmin(admin.ModelAdmin):
+class SaccoAdmin(LeafletGeoAdmin):
     list_display = ['name', 'ending_point', ]
     search_fields = ['name', 'ending_point', ]
     fieldsets = [

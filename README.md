@@ -44,18 +44,29 @@ python -m virtualenv venv
 source venv/bin/activate
 ```
 
+#### Set up GEO libraries
+Download osgeo installer on link below:
+```
+https://trac.osgeo.org/osgeo4w/
+```
+This installs libraries that enable django map rendering
+
 #### Set up Postresql database
+Make sure to install spatial database
+
 On your database query console
 ```
 CREATE EXTENSION pg_trgm;
+CREATE EXTENSION postgis;
 ```
 
 #### Setting up environment variables
 Create a `.env` file and paste the following filling where appropriate:
 ```
-SECRET_KEY='rdtfyguihjohucbdsjnc'
+SECRET_KEY='<SECRET_KEY>'
 DEBUG=True
 MODE='dev'
+GOOGLE_MAP_API_KEY='<GOOGLE_MAP_API_KEY>'
 ```
 
 #### Install dependencies

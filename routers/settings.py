@@ -13,6 +13,20 @@ import os
 from pathlib import Path
 from decouple import config, Csv
 
+if os.name == 'nt':
+    import platform
+
+    OSGEO4W = r"C:\OSGeo4W"
+    # if '64' in platform.architecture()[0]:
+    #     OSGEO4W += "64"
+    assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
+    os.environ['OSGEO4W_ROOT'] = OSGEO4W
+    os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal"
+    os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+
+GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal303.dll'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -36,10 +50,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'users.apps.UsersConfig',
     'web.apps.WebConfig',
     'crispy_forms',
     'crispy_bootstrap5',
+    'leaflet',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +94,7 @@ WSGI_APPLICATION = 'routers.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
@@ -123,6 +139,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 MEDIA_URL = '/media/'
@@ -139,3 +157,19 @@ LOGIN_URL = 'login'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (-1.28333, 36.81667),
+    'DEFAULT_ZOOM': 10,
+    'MIN_ZOOM': 3,
+    'MAX_ZOOM': 20,
+    'DEFAULT_PRECISION': 6,
+    'ATTRIBUTION_PREFIX': 'Routers',
+    'PLUGINS': {
+        'leaflet-geocoder': {
+            'css': ['https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css', ],
+            'js': 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js',
+            'auto-include': True,
+        },
+    },
+}
