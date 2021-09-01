@@ -37,12 +37,15 @@
         }).addTo(map);
         L.Routing.control({
             waypoints: [
-                L.latLng(-0.23, 36.87),
-                L.latLng(0.23, 37.64)
+                L.latLng(-1.25199765, 36.893333739901976),
+                L.latLng(-1.036648, 37.077523)
             ],
             routeWhileDragging: true,
             geocoder: L.Control.Geocoder.nominatim(),
-        }).on('routeselected', function (e) {
+        }).
+        {#on('routingstart', showSpinner)#}
+        {#    .on('routesfound routingerror', hideSpinner).#}
+        on('routeselected', function (e) {
             var route = e.route;
             console.log(route)
             console.log(route.name);
@@ -55,7 +58,7 @@
     }
 </script>
 {% include "web/navbar.html" %}
-<div class="">
+<div class="mt-5">
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">

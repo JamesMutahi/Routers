@@ -66,7 +66,11 @@ Create a `.env` file and paste the following filling where appropriate:
 SECRET_KEY='<SECRET_KEY>'
 DEBUG=True
 MODE='dev'
-GOOGLE_MAP_API_KEY='<GOOGLE_MAP_API_KEY>'
+DB_NAME='<DB_NAME>'
+DB_USER='<DB_USER>'
+DB_PASSWORD='<DB_PASSWORD>'
+DB_HOST='127.0.0.1'
+DB_PORT='<DB_PORT>'
 ```
 
 #### Install dependencies
