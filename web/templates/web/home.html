@@ -51,8 +51,8 @@
                     data: {
                         "route": JSON.stringify(route),
                     },
-                    success: function () {
-                        $('#message').html("<h2>Data submitted</h2>")
+                    success: function (data) {
+                        $('#content').html(data);
                     },
                     failure: function (data) {
                         console.log("failure");
@@ -64,7 +64,7 @@
     </script>
     <div class="leaflet-container">{% leaflet_map "routers" callback="window.our_routing" %}</div>
 
-    <div class="container mt-5">
+    <div class="container mt-5 content">
         {% if saccos and route %}
             <h2>Saccos on {{ route.name }}</h2>
             {% for sacco in saccos %}
