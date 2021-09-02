@@ -1,11 +1,13 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.postgres.search import TrigramSimilarity
+from django.contrib.gis.geos import Point
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, CreateView
 
-from web.forms import SearchForm
-from web.models import Route, Sacco, Commute
+from web.models import Route, Commute, Sacco
 
 
 def landing_page(request):
@@ -18,33 +20,52 @@ def landing_page(request):
 
 @login_required()
 def home(request):
-    form = SearchForm()
-    location = None
-    destination = None
-    routes = []
-    if 'destination' in request.GET or 'location' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            # Get data from form
-            destination = form.cleaned_data['destination']
-            location = form.cleaned_data['location']
-            # filter routes by similarity to location (starting_point)
-            routes = Route.objects.annotate(
-                similarity=TrigramSimilarity('starting_point', location),
-            ).filter(similarity__gt=0.3).order_by('-similarity')
-            # filter saccos by similarity to destination (ending_point)
-            saccos = Sacco.objects.annotate(
-                similarity=TrigramSimilarity('ending_point', destination),
-            ).filter(similarity__gt=0.3).order_by('-similarity')
-            # filter routes by saccos with the destination
-            routes = routes.filter(saccos__in=saccos)
-            # Save sacco ids; will fetch this when viewing route detail to remove saccos not going to the destination
-            sacco_ids = []
-            for sacco in saccos:
-                sacco_ids.append(sacco.id)
-            request.session['sacco_ids'] = sacco_ids
-    context = {'form': form, 'location': location, 'destination': destination, 'routes': routes, 'title': 'Search'}
-    return render(request, 'web/search.html', context)
+    saccos = None
+    if 'sacco_ids' in request.session:
+        saccos = Sacco.objects.filter(id__in=request.session.get('sacco_ids'))
+    context = {
+        "saccos": saccos,
+        "route": request.session.get('route'),
+    }
+    print(context)
+    return render(request, 'web/home.html', context)
+
+
+@login_required()
+@csrf_exempt
+def search(request):
+    if request.method == "POST":
+        route = json.loads(request.POST["route"])
+        # save route to session
+        request.session['route'] = route
+        # create Point A
+        point_a = Point(route["inputWaypoints"][0]["latLng"]["lng"], route["inputWaypoints"][0]["latLng"]["lat"],
+                        srid=4326)
+        # create Point B
+        point_b = Point(route["inputWaypoints"][1]["latLng"]["lng"], route["inputWaypoints"][1]["latLng"]["lat"],
+                        srid=4326)
+        sacco_ids = []
+
+        # 0.008 degrees is roughly a kilometre in radius
+        # Get all saccos and routes getting on point A
+        point_a_saccos = Sacco.objects.filter(ending_point__dwithin=(point_a, 0.020))
+        point_a_routes = Route.objects.filter(starting_point__dwithin=(point_a, 0.020))
+
+        # Get all saccos and routes getting on point B
+        point_b_saccos = Sacco.objects.filter(ending_point__dwithin=(point_b, 0.020))
+        point_b_routes = Route.objects.filter(starting_point__dwithin=(point_b, 0.020))
+        # Filter the saccos and routes by those getting on point B
+        for route in point_a_routes:
+            for sacco in route.saccos.all():
+                if sacco in point_b_saccos:
+                    sacco_ids.append(sacco.id)
+        for route in point_b_routes:
+            for sacco in route.saccos.all():
+                if sacco in point_a_saccos:
+                    sacco_ids.append(sacco.id)
+        # save sacco ids to session to refer to in home view
+        request.session['sacco_ids'] = sacco_ids
+    return redirect(home)
 
 
 class RouteDetailView(DetailView, LoginRequiredMixin):
