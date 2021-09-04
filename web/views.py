@@ -1,8 +1,11 @@
 import json
+from django.core.serializers import json as django_json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.gis.geos import Point
+from django.core import serializers
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, CreateView
@@ -20,15 +23,7 @@ def landing_page(request):
 
 @login_required()
 def home(request):
-    saccos = None
-    if 'sacco_ids' in request.session:
-        saccos = Sacco.objects.filter(id__in=request.session.get('sacco_ids'))
-    context = {
-        "saccos": saccos,
-        "route": request.session.get('route'),
-    }
-    print(context)
-    return render(request, 'web/home.html', context)
+    return render(request, 'web/home.html')
 
 
 @login_required()
@@ -63,9 +58,12 @@ def search(request):
             for sacco in route.saccos.all():
                 if sacco in point_a_saccos:
                     sacco_ids.append(sacco.id)
-        # save sacco ids to session to refer to in home view
-        request.session['sacco_ids'] = sacco_ids
-    return redirect(home)
+        data = dict()
+        saccos = Sacco.objects.filter(id__in=sacco_ids)
+        json_serializer = django_json.Serializer()
+        json_serialized = json_serializer.serialize(saccos)
+        data["saccos"] = json_serialized
+        return JsonResponse(data)
 
 
 class RouteDetailView(DetailView, LoginRequiredMixin):
