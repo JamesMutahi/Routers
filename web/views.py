@@ -43,12 +43,12 @@ def search(request):
 
         # 0.008 degrees is roughly a kilometre in radius
         # Get all saccos and routes getting on point A
-        point_a_saccos = Sacco.objects.filter(ending_point__dwithin=(point_a, 0.050))
-        point_a_routes = Route.objects.filter(starting_point__dwithin=(point_a, 0.050))
+        point_a_saccos = Sacco.objects.filter(ending_point__dwithin=(point_a, 0.090))
+        point_a_routes = Route.objects.filter(starting_point__dwithin=(point_a, 0.090))
 
         # Get all saccos and routes getting on point B
-        point_b_saccos = Sacco.objects.filter(ending_point__dwithin=(point_b, 0.050))
-        point_b_routes = Route.objects.filter(starting_point__dwithin=(point_b, 0.050))
+        point_b_saccos = Sacco.objects.filter(ending_point__dwithin=(point_b, 0.090))
+        point_b_routes = Route.objects.filter(starting_point__dwithin=(point_b, 0.090))
         # Filter the saccos and routes by those getting on point B
         for route in point_a_routes:
             for sacco in route.saccos.all():

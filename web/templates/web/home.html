@@ -25,12 +25,14 @@
                     },
                     success: function (data) {
                         data = JSON.parse(data.saccos);
-                        $('#js-sacco-title').after('<h2>Saccos on ' + route.name +'</h2>')
+                        $('#js-sacco-title').replaceWith('<h1 id="js-sacco-title"> Saccos on ' + route.name + '</h1>');
+                        let saccosHTML = '';
                         data.forEach(function (element) {
-                            let saccoName = element.fields.name;
-                            let number = data.indexOf(element) + 1;
-                            $('#js-sacco-content').after('<h3>' + number + '. ' + saccoName + '</h3>')
-                        });
+                            console.log(element.fields.name);
+                            saccosHTML += '<p>' + element.fields.name + '</p>';
+                        })
+                        console.log(saccosHTML);
+                        $('#js-sacco-content').replaceWith('<div id="js-sacco-content">' + saccosHTML + '</div>');
                     },
                     failure: function (data) {
                         console.log("failure");
@@ -43,8 +45,11 @@
     <div class="leaflet-container">{% leaflet_map "routers" callback="window.our_routing" %}</div>
 
     <div class="container mt-5">
-        <div id="js-sacco-title"></div>
-        <div id="js-sacco-content">
+        <h1 id="js-sacco-title"></h1>
+        <div class="my-3">
+            <div id="js-sacco-content">
+
+            </div>
         </div>
     </div>
 {% endblock %}
