@@ -24,14 +24,13 @@
                         "route": JSON.stringify(route),
                     },
                     success: function (data) {
+                        let distance = route['summary']['totalDistance'];
                         data = JSON.parse(data.saccos);
                         $('#js-sacco-title').replaceWith('<h1 id="js-sacco-title"> Saccos on ' + route.name + '</h1>');
                         let saccosHTML = '';
                         data.forEach(function (element) {
-                            console.log(element.fields.name);
                             saccosHTML += '<p>' + element.fields.name + '</p>';
                         })
-                        console.log(saccosHTML);
                         $('#js-sacco-content').replaceWith('<div id="js-sacco-content">' + saccosHTML + '</div>');
                     },
                     failure: function (data) {
