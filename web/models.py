@@ -45,8 +45,7 @@ class BusStop(models.Model):
 
 
 class Fare(models.Model):
-    route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True, related_name='fare')
-    distance = models.FloatField()
+    sacco = models.ForeignKey(Sacco, on_delete=models.SET_NULL, null=True, related_name='fare')
     fare = models.PositiveIntegerField()
 
     def __str__(self):

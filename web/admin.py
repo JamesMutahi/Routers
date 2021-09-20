@@ -21,10 +21,10 @@ class FareInline(admin.TabularInline):
 
 
 class FareAdmin(admin.ModelAdmin):
-    list_display = ['route', 'distance', 'fare', ]
-    search_fields = ['fare', 'tld', ]
+    list_display = ['sacco', 'fare', ]
+    search_fields = ['fare', 'sacco', ]
     fieldsets = [
-        (None, {'fields': ['route', 'distance', 'fare', ]}),
+        (None, {'fields': ['sacco', 'fare', ]}),
     ]
 
 
